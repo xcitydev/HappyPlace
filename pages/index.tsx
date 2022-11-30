@@ -1,8 +1,32 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import { GetServerSideProps } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
+import { sanityClient } from "../sanity";
+import { Collection } from "../typings";
+import {
+  useAddress,
+  useActiveListings,
+  useContract,
+} from "@thirdweb-dev/react";
+import Login from "./components/login";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import Header from "./components/header";
 
-export default function Home() {
+interface Props {
+  collections: Collection[];
+}
+export default function Home({ collections }: Props) {
+  const address = useAddress();
+  if (!address) return <Login />;
+  const { contract } = useContract(
+    process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT,
+    "marketplace"
+  );
+  const router = useRouter();
+  const { data: listings, isLoading: loadingListings } =
+    useActiveListings(contract);
   return (
     <div className={styles.container}>
       <Head>
@@ -11,61 +35,64 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      <Header />
+      <div className="h-[40vh] bg-red-500 w-full">
+        {collections.map((item) => (
+          <Link href={`/nfts/${item.slug.current}`}>
+            <p className="font-semibold">{item.nftCollectionName} HERE</p>
+          </Link>
+        ))}
+      </div>
+      <div>List HERE</div>
+      <div>
+        {loadingListings ? (
+          <p className="text-center text-2xl font-Alkalami animate-pulse text-blue-600">
+            Loading Listings...
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mx-auto">
+            {listings?.map((listing) => (
+              <div
+                onClick={() => router.push(`/listings/${listing.id}`)}
+                key={listing.id}
+                className="flex flex-col card hover:scale-105 transition-all duration-150 ease-out"
+              >
+                <div></div>
+                <div className="pt-2 space-y-2">
+                  <div>
+                    <h2 className="text-lg truncate">{listing.asset.name}</h2>
+                    <hr />
+                    <p className="truncate text-sm mt-2 text-gray-600">
+                      {listing.asset.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
-  )
+  );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const query = `*[_type == "collection" ]{
+  ...,
+  description,
+  creator->{
+  ...,
+}
+            
+            
+            
+  }`;
+
+  const collections = await sanityClient.fetch(query);
+  console.log(collections);
+  return {
+    props: {
+      collections,
+    },
+  };
+};
