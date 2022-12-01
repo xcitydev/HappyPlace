@@ -1,6 +1,6 @@
 interface Image {
   asset: {
-    url: string;
+    url: any;
   };
 }
 
@@ -26,4 +26,9 @@ export interface Collection {
   creator: Creator;
   mainImage: Image;
   previewImage: Image;
+}
+
+export interface collectionAddy {
+  _id: string;
+  addy: Array;
 }

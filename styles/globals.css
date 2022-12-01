@@ -1,3 +1,152 @@
+@import url("https://fonts.googleapis.com/css2?family=Alkalami&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel&family=Pacifico&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel&family=Pacifico&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel&family=Fraunces:ital,opsz,wght@0,9..144,100;0,9..144,200;0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.Home {
+  display: flex;
+  flex-direction: row;
+}
+.sidebar {
+  width: 25%;
+  background-color: #00001f;
+  height: 100vh;
+  color: #ffffff;
+}
+.sect {
+  display: flex;
+  flex-direction: column;
+}
+.sect1 {
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  justify-content: space-between;
+}
+.sect1text {
+  width: 50%;
+  padding: 40px 30px;
+}
+.sect1text h1 {
+  font-family: Fraunces;
+  font-size: 40px;
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.sect1text p {
+  font-family: Poppins;
+  font-size: 15px;
+  line-height: 30px;
+}
+.sect1btn {
+  background: linear-gradient(rgb(102, 0, 102), rgb(0, 0, 1));
+  padding: 15px 40px;
+  border-radius: 30px;
+  color: #ffffff;
+  margin-top: 20px;
+  border: 2px solid rgb(102, 0, 102);
+  font-family: Poppins;
+  font-weight: 500;
+}
+.temporary {
+  background-color: #00001f;
+  width: 60%;
+  height: 60vh;
+}
+/* body {
+    background-color: #00001A;
+} */
+header {
+  background-color: #00001f;
+  width: 100%;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  font-family: Poppins;
+}
+header .logo {
+  color: #ffffff;
+}
+header a {
+  text-decoration: none;
+  color: #ffffff;
+}
+header a:hover {
+  color: blueviolet;
+  border-bottom: 1px solid #ffffff;
+}
+.CMtext {
+  text-align: center;
+}
+.CM {
+  margin: 6% auto;
+  padding: 10% 2%;
+  height: auto;
+  width: 45%;
+  background-color: #00001f;
+  color: #ffffff;
+  border-radius: 40px;
+  box-shadow: 0px 0px 30px black;
+  text-align: center;
+}
+.CM h1 {
+  font-size: 30px;
+  color: #ffffff;
+  font-family: Fraunces;
+  margin-bottom: 10px;
+}
+.CM h2 {
+  font-size: 20px;
+  color: #ffffff;
+  font-family: Poppins;
+  margin-bottom: 30px;
+}
+.CMbtn {
+  /* margin: 0 auto;
+    position: absolute;
+    top: 50%; */
+  background: linear-gradient(rgb(0, 0, 31), rgb(102, 0, 102));
+  border-radius: 30px;
+  padding: 15px 30px;
+  font-size: 17px;
+  border: 1px solid rgb(102, 0, 102);
+}
+.HMbtn {
+  /* margin: 0 auto;
+    position: absolute;
+    top: 50%; */
+  background: linear-gradient(rgb(0, 0, 31), rgb(102, 0, 102));
+  border-radius: 10px;
+  padding: 10px 7px;
+  margin-right: 17px;
+  font-size: 17px;
+  border: 1px solid rgb(102, 0, 102);
+}
+/* .tr {
+  width: 100%;
+  background-color: blue;
+  height: 10vh;
+} */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: whitesmoke;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 0, 102, 0.8);
+}
+
+/* SLIDES */

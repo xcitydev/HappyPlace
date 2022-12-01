@@ -1,13 +1,16 @@
 import { GetServerSideProps } from "next";
+import { useState, useRef, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { sanityClient } from "../sanity";
 import { Collection } from "../typings";
+import { urlFor } from "../sanity";
 import {
   useAddress,
   useActiveListings,
   useContract,
+  MediaRenderer,
 } from "@thirdweb-dev/react";
 import Login from "./components/login";
 import { useRouter } from "next/router";
@@ -19,7 +22,35 @@ interface Props {
 }
 export default function Home({ collections }: Props) {
   const address = useAddress();
+
   if (!address) return <Login />;
+  // Sliding upcoming collections
+  const delay = 2500;
+  const [index, setIndex] = useState(0);
+  const timeoutRef = useRef<any>();
+
+  function resetTimeout() {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  }
+  useEffect(() => {
+    resetTimeout();
+    timeoutRef.current = setTimeout(
+      () =>
+        setIndex((prevIndex) =>
+          prevIndex === collections.length - 1 ? 0 : prevIndex + 1
+        ),
+      delay
+    );
+
+    return () => {
+      resetTimeout();
+    };
+  }, [index]);
+
+  // End of sliding Upcoming Collections
+
   const { contract } = useContract(
     process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT,
     "marketplace"
@@ -27,6 +58,7 @@ export default function Home({ collections }: Props) {
   const router = useRouter();
   const { data: listings, isLoading: loadingListings } =
     useActiveListings(contract);
+  console.log(listings, "hereee");
   return (
     <div className={styles.container}>
       <Head>
@@ -36,41 +68,84 @@ export default function Home({ collections }: Props) {
       </Head>
 
       <Header />
-      <div className="h-[40vh] bg-red-500 w-full">
-        {collections.map((item) => (
-          <Link href={`/nfts/${item.slug.current}`}>
-            <p className="font-semibold">{item.nftCollectionName} HERE</p>
+      <div className="Home">
+        <div className="sidebar">
+          <Link href="/list">
+            <p>Dashboard</p>
           </Link>
-        ))}
-      </div>
-      <div>List HERE</div>
-      <div>
-        {loadingListings ? (
-          <p className="text-center text-2xl font-Alkalami animate-pulse text-blue-600">
-            Loading Listings...
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mx-auto">
-            {listings?.map((listing) => (
+          <Link href="/daoproposal/proposal">
+            <p>Proposal</p>
+          </Link>
+        </div>
+        <div className="sect overflow-x-scroll">
+          <div className="flex justify-center items-center h-[64vh] bg-black">
+            {collections.map((item, index) => (
               <div
-                onClick={() => router.push(`/listings/${listing.id}`)}
-                key={listing.id}
-                className="flex flex-col card hover:scale-105 transition-all duration-150 ease-out"
+                className="sect1 py-2 px-2 bg-white border-[1px]"
+                key={index}
               >
-                <div></div>
-                <div className="pt-2 space-y-2">
-                  <div>
-                    <h2 className="text-lg truncate">{listing.asset.name}</h2>
-                    <hr />
-                    <p className="truncate text-sm mt-2 text-gray-600">
-                      {listing.asset.description}
-                    </p>
-                  </div>
+                <div className="sect1text bg-white">
+                  <h1>{item.nftCollectionName}</h1>
+                  <p>
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                    Inventore quis deleniti quas alias vitae veniam quos
+                    blanditiis earum voluptas, totam ad, saepe, maxime beatae.
+                    Fugiat ratione ipsum hic quae minus.
+                  </p>
+                  <Link href={`/nfts/${item.slug.current}`} className="">
+                    <button className="sect1btn">HERE...</button>
+                  </Link>
+                </div>
+                <div className="temporary">
+                  <img
+                    src={urlFor(item.mainImage).url()}
+                    alt="nftcollection"
+                    className="w-full h-full"
+                  />
                 </div>
               </div>
             ))}
           </div>
-        )}
+          {/* <div className="h-[40vh] bg-red-500 w-full">
+            {collections.map((item) => (
+              <Link href={`/nfts/${item.slug.current}`} className="">
+                <p className="font-semibold">{item.nftCollectionName} HERE</p>
+                <img className="w-44 h-[8rem]" src={item.mainImage} />
+              </Link>
+            ))}
+          </div> */}
+          <div>List HERE</div>
+          <div>
+            {loadingListings ? (
+              <p className="text-center text-2xl font-Alkalami animate-pulse text-blue-600">
+                Loading Listings...
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mx-auto">
+                {listings?.map((listing) => (
+                  <div
+                    onClick={() => router.push(`/listings/${listing.id}`)}
+                    key={listing.id}
+                    className="flex flex-col card hover:scale-105 transition-all duration-150 ease-out"
+                  >
+                    <div></div>
+                    <div className="pt-2 space-y-2">
+                      <div>
+                        <h2 className="text-lg truncate">
+                          {listing.asset.name}
+                        </h2>
+                        <hr />
+                        <p className="truncate text-sm mt-2 text-gray-600">
+                          {listing.asset.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
