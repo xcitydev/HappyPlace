@@ -17,11 +17,7 @@ import Header from "./components/header";
 import network from "../utils/network";
 import { useRouter } from "next/router";
 
-type Props = {
-  collections: collectionAddy;
-};
-
-const list = ({ collections }: Props) => {
+const list = () => {
   const router = useRouter();
   const address = useAddress();
   const [selectedNFT, setSelectedNFT] = useState<NFT>();
@@ -41,6 +37,11 @@ const list = ({ collections }: Props) => {
   );
   const { contract: dropContract } = useContract(
     process.env.NEXT_PUBLIC_NFT_DROP,
+    "nft-drop"
+  );
+
+  const { contract: dropContract2 } = useContract(
+    process.env.NEXT_PUBLIC_NFT_DROP2,
     "nft-drop"
   );
 
@@ -64,6 +65,10 @@ const list = ({ collections }: Props) => {
   );
   const { data: ownedNft, isLoading: isLoadingO } = useOwnedNFTs(
     dropContract,
+    address
+  );
+  const { data: ownedNft2, isLoading: isLoading2 } = useOwnedNFTs(
+    dropContract2,
     address
   );
   if (!ownedNft) return;
@@ -186,10 +191,8 @@ const list = ({ collections }: Props) => {
   return (
     <div>
       <Header />
-      <main className="max-w-6xl mx-auto p-10 pt-2">
-        <h1 className="text-4xl font-semibold font-Cinzel pt-3">
-          List an Item
-        </h1>
+      <main className="max-w-6xl mx-auto p-10 pt-[6rem]">
+        <h1 className="text-4xl font-semibold font-Cinzel pt-3">Dashboard</h1>
         <p>Below you will find the NFTs in your wallet</p>
         <div className="flex overflow-x-scroll space-x-2 p-4">
           {isLoadingNFT ? (

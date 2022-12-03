@@ -8,6 +8,7 @@ import {
   useMakeOffer,
   useOffers,
   useAcceptDirectListingOffer,
+  useCancelListing,
   useNetworkMismatch,
   useAddress,
 } from "@thirdweb-dev/react";
@@ -19,6 +20,7 @@ import { ListingType, NATIVE_TOKENS } from "@thirdweb-dev/sdk";
 import CountDown from "react-countdown";
 import network from "../../utils/network";
 import { ethers } from "ethers";
+import Link from "next/link";
 
 type Props = {};
 
@@ -27,6 +29,11 @@ const ListingPage = (props: Props) => {
     displayValue: string;
     symbol: string;
   }>();
+  //  const {
+  //    mutate: cancelListing,
+  //    isLoading: loadingCancel,
+  //    error: errorcancel,
+  //  } = useCancelListing(">>YourMarketplaceContractInstance<<");
   const [bidAmount, setBidAmount] = useState("");
   const networkMismatch = useNetworkMismatch();
   const address = useAddress();
@@ -45,7 +52,7 @@ const ListingPage = (props: Props) => {
     error: errorMakeOffer,
   } = useMakeOffer(contract);
   const { data: listing, isLoading, error } = useListing(contract, listingId);
-
+  console.log(offers, "OFFERS");
   const { mutate: acceptOffer } = useAcceptDirectListingOffer(contract);
 
   useEffect(() => {
@@ -120,67 +127,69 @@ const ListingPage = (props: Props) => {
   };
 
   const createBidOrOffer = async () => {
-    try {
-      if (networkMismatch) {
-        switchNetwork && switchNetwork(network);
+    if (networkMismatch) {
+      switchNetwork && switchNetwork(network);
+      return;
+    }
+
+    if (listing?.type === ListingType.Direct) {
+      if (
+        listing.buyoutPrice.toString() ===
+        ethers.utils.parseEther(bidAmount).toString()
+      ) {
+        console.log("Buy Out price met, buying NFT...");
+        buyNFT();
         return;
       }
 
-      if (listing?.type === ListingType.Direct) {
-        if (
-          listing.buyoutPrice.toString() ===
-          ethers.utils.parseEther(bidAmount).toString()
-        ) {
-          console.log("Buy Out price met, buying NFT...");
-          buyNFT();
-          return;
+      console.log("Buy out price was not met");
+
+      await makeOffer(
+        {
+          quantity: 1,
+          listingId,
+          pricePerToken: bidAmount,
+        },
+        {
+          onSuccess(data, variables, context) {
+            alert("Offer made successfully");
+            console.log(data, variables, context);
+            setBidAmount("");
+          },
+          onError(error, variables, context) {
+            alert("Offer could not be made");
+            console.log("ERROR:", error, variables, context);
+          },
         }
-
-        console.log("Buy out price was not met");
-
-        await makeOffer(
-          {
-            quantity: 1,
-            listingId,
-            pricePerToken: bidAmount,
-          },
-          {
-            onSuccess(data, variables, context) {
-              alert("Offer made successfully");
-              console.log(data, variables, context);
-              setBidAmount("");
-            },
-            onError(error, variables, context) {
-              alert("Offer could not be made");
-              console.log("ERROR:", error, variables, context);
-            },
-          }
-        );
-      }
-
-      if (listing?.type === ListingType.Auction) {
-        console.log("making bid");
-        await makeBid(
-          {
-            listingId,
-            bid: bidAmount,
-          },
-          {
-            onSuccess(data, variables, context) {
-              alert("Bid made successfully");
-              console.log(data, variables, context);
-              setBidAmount("");
-            },
-            onError(error, variables, context) {
-              alert("Bid could not be made");
-              console.log("ERROR:", error, variables, context);
-            },
-          }
-        );
-      }
-    } catch (error) {
-      console.log("ERROR:", error);
+      );
     }
+
+    if (listing?.type === ListingType.Auction) {
+      console.log("making bid");
+      await makeBid(
+        {
+          listingId,
+          bid: bidAmount,
+        },
+        {
+          onSuccess(data, variables, context) {
+            alert("Bid made successfully");
+            console.log(data, variables, context);
+            setBidAmount("");
+          },
+          onError(error, variables, context) {
+            alert("Bid could not be made");
+            console.log("ERROR:", error, variables, context);
+          },
+        }
+      );
+    }
+  };
+
+  const accept = async (listingId: any) => {
+    await contract?.auction.buyoutListing(listingId).then((e) => {
+      console.log(e);
+    });
   };
   if (isLoading)
     return (
@@ -243,19 +252,21 @@ const ListingPage = (props: Props) => {
             </button>
           </div>
 
-          {listing.type === ListingType.Direct && offers && (
-            <div className="grid grid-cols-2 text-[15px]">
+          {listing.type === ListingType.Auction && offers && (
+            <div className="grid grid-cols-2 text-[15px] py-3">
               <p className="col-spapn-1 font-semibold py-2">Offers:</p>
               <p>{offers.length > 0 ? offers.length : 0}</p>
               {offers.map((offer) => (
                 <>
-                  <p>
+                  <p className="flex items-center">
                     <UserCircleIcon className="h-3 mr-2" />
-                    {offer.offeror.slice(0, 5) +
-                      "..." +
-                      offer.offeror.slice(-5)}
+                    <span>
+                      {offer.offeror.slice(0, 5) +
+                        "..." +
+                        offer.offeror.slice(-5)}
+                    </span>
                   </p>
-                  <div>
+                  <div className="">
                     <p>
                       {ethers.utils.formatEther(offer.totalOfferAmount)}
                       {""}
@@ -333,6 +344,9 @@ const ListingPage = (props: Props) => {
             </button>
           </div>
         </section>
+        <Link href="/" className="lg:hidden bg-purple-700 text-white px-2 p-1 w-fit rounded">
+          <p>Go Back</p>
+        </Link>
       </main>
     </div>
   );

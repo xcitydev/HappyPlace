@@ -6,6 +6,7 @@ import styles from "../styles/Home.module.css";
 import { sanityClient } from "../sanity";
 import { Collection } from "../typings";
 import { urlFor } from "../sanity";
+import { Slide } from "react-slideshow-image";
 import {
   useAddress,
   useActiveListings,
@@ -16,16 +17,26 @@ import Login from "./components/login";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Header from "./components/header";
+import {
+  BanknotesIcon,
+  ClockIcon,
+  HomeIcon,
+  QuestionMarkCircleIcon,
+  RectangleGroupIcon,
+  TrophyIcon,
+  UserGroupIcon,
+} from "@heroicons/react/24/outline";
+import { ListingType } from "@thirdweb-dev/sdk";
 
 interface Props {
   collections: Collection[];
 }
 export default function Home({ collections }: Props) {
   const address = useAddress();
-
+  console.log("Collections", collections);
   if (!address) return <Login />;
   // Sliding upcoming collections
-  const delay = 2500;
+  const delay = 4500;
   const [index, setIndex] = useState(0);
   const timeoutRef = useRef<any>();
 
@@ -68,76 +79,191 @@ export default function Home({ collections }: Props) {
       </Head>
 
       <Header />
-      <div className="Home">
-        <div className="sidebar">
-          <Link href="/list">
-            <p>Dashboard</p>
+      <div className="flex pt-[5rem] ">
+        <div className="lg:w-[20%] w-[15%] fixed h-[90vh] border-r-2 border-black lg:p-[2rem] p-3 pt-[2rem] whiteSmoke space-y-5">
+          <Link
+            href="/list"
+            className="flex items-center space-x-3 cols p-2 rounded textF  hover:px-4 transition-all"
+          >
+            <HomeIcon width="30px" />
+            <p className="hidden lg:flex">Dashboard</p>
           </Link>
-          <Link href="/daoproposal/proposal">
-            <p>Proposal</p>
+          <Link
+            href="/daoproposal/proposal"
+            className="flex items-center space-x-3 cols p-2 rounded textF  hover:px-4 transition-all"
+          >
+            <UserGroupIcon width="30px" />
+            <p className="hidden lg:flex">DAO Voting</p>
           </Link>
+          <Link
+            href="/launchpad/launchpad"
+            className="flex items-center space-x-3 cols p-2 rounded textF  hover:px-4 transition-all"
+          >
+            <RectangleGroupIcon width="30px" />
+            <p className="hidden lg:flex">LaunchPad</p>
+          </Link>
+          <Link
+            href="/launchpad/launchpad"
+            className="flex items-center space-x-3 cols p-2 rounded textF  hover:px-4 transition-all"
+          >
+            <QuestionMarkCircleIcon width="30px" />
+            <p className="hidden lg:flex">Support</p>
+          </Link>
+          <Link
+            href="/play2earn/play2earn"
+            className="flex items-center space-x-3 cols p-2 rounded textF  hover:px-4 transition-all"
+          >
+            <TrophyIcon width="30px" />
+            <p className="hidden lg:flex">Play 2 Earn</p>
+          </Link>
+          <p className="text-center text-[14px] hidden lg:flex pt-6 font-Cinzel font-semibold">
+            Our Social Media Accounts
+          </p>
+          <div className="lg:grid lg:grid-cols-2 flex flex-wrap">
+            <div className="flex col-span-1 my-2 space-x-2 hover:text-white hover:bg-black lg:p-1 rounded-sm cursor-pointer">
+              <img
+                className="w-[20px]"
+                src={
+                  "https://gateway.pinata.cloud/ipfs/QmdNh86LchSRQW46bS4dWEVxu1ZGrJoBDTL3CUUCuuaniY"
+                }
+                alt="yt"
+              />
+              <p className="text-[13px] font-Cinzel font-semibold hidden lg:flex">
+                Youtube
+              </p>
+            </div>
+            <div className="flex col-span-1 my-2 space-x-2 hover:text-white hover:bg-black lg:p-1 rounded-sm cursor-pointer">
+              <img
+                className="w-[20px]"
+                src={
+                  "https://gateway.pinata.cloud/ipfs/QmRe8ntS8gsBkEjMcY2RQh9WxAFaxMMyrzwWVvtHERaMYt"
+                }
+                alt="yt"
+              />
+              <p className="text-[13px] font-Cinzel font-semibold hidden lg:flex">
+                Instagram
+              </p>
+            </div>
+            <div className="flex col-span-1 my-2 space-x-2 hover:text-white hover:bg-black lg:p-1 rounded-sm cursor-pointer">
+              <img
+                className="w-[20px]"
+                src={
+                  "https://gateway.pinata.cloud/ipfs/QmZab3D1FcsiEg15BNpTamhwC9ZugYmn2z8yfzy8GJN3c3"
+                }
+                alt="yt"
+              />
+              <p className="text-[13px] font-Cinzel font-semibold hidden lg:flex">
+                Twitter
+              </p>
+            </div>
+            <div className="flex col-span-1 my-2 space-x-2 hover:text-white hover:bg-black lg:p-1 rounded-sm cursor-pointer">
+              <img
+                className="w-[20px]"
+                src={
+                  "https://gateway.pinata.cloud/ipfs/Qmc9vSD4HG5fzAUVRhNYrzv8ULSLj4XqAr7jzoAYUPcuv4"
+                }
+                alt="yt"
+              />
+              <p className="text-[13px] font-Cinzel font-semibold hidden lg:flex">
+                Discord
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="sect overflow-x-scroll">
-          <div className="flex justify-center items-center h-[64vh] bg-black">
+        <div className="slideshow lg:ml-[20%] ml-[15%] overflow-hidden w-full overflow-y-scroll">
+          <div
+            className={`h-[60vh] lg:space-x-8 space-x-2 flex whitespace-nowrap transition ease-in duration-1000`}
+            style={{ transform: `translate3d(${-index * 80}%, 0, 0)` }}
+          >
             {collections.map((item, index) => (
               <div
-                className="sect1 py-2 px-2 bg-white border-[1px]"
+                className="rounded-[4px] lg:w-full w-[300px] shadow-2xl lg:mr-5 flex lg:flex-row lg:items-center flex-col-reverse lg:justify-between justify-around bg-[#00001f] text-white"
                 key={index}
               >
-                <div className="sect1text bg-white">
-                  <h1>{item.nftCollectionName}</h1>
-                  <p>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Inventore quis deleniti quas alias vitae veniam quos
-                    blanditiis earum voluptas, totam ad, saepe, maxime beatae.
-                    Fugiat ratione ipsum hic quae minus.
-                  </p>
+                <div className="lg:w-2/4 flex px-3 flex-col space-y-3">
+                  <div>
+                    <h1 className="font-[Poppins] lg:text-4xl text-xl">
+                      {item.nftCollectionName}
+                    </h1>
+                    <p className="font-semibold truncate">
+                      Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                      Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                    </p>
+                  </div>
                   <Link href={`/nfts/${item.slug.current}`} className="">
-                    <button className="sect1btn">HERE...</button>
+                    <button className="sect1btn">Go to launchpad</button>
                   </Link>
                 </div>
-                <div className="temporary">
-                  <img
-                    src={urlFor(item.mainImage).url()}
-                    alt="nftcollection"
-                    className="w-full h-full"
-                  />
-                </div>
+                <img
+                  src={urlFor(item.mainImage).url()}
+                  alt="nftcollection"
+                  className="lg:w-[55%] lg:h-[60vh] h-[30vh] rounded-tl-md object-fill"
+                />
               </div>
             ))}
           </div>
-          {/* <div className="h-[40vh] bg-red-500 w-full">
-            {collections.map((item) => (
-              <Link href={`/nfts/${item.slug.current}`} className="">
-                <p className="font-semibold">{item.nftCollectionName} HERE</p>
-                <img className="w-44 h-[8rem]" src={item.mainImage} />
-              </Link>
-            ))}
-          </div> */}
-          <div>List HERE</div>
           <div>
+            <div className="py-[3rem] text-center text-3xl font-Cinzel font-semibold">
+              <p>NFTS ON HAPPY PLACE MARKETPLACE</p>
+              <p className="font-semibold text-[14px] pb-1">
+                Below are available NFTs on happy place marketplace
+              </p>
+            </div>
             {loadingListings ? (
               <p className="text-center text-2xl font-Alkalami animate-pulse text-blue-600">
                 Loading Listings...
               </p>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mx-auto">
+              // <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mx-auto">
+              <div className="listings ml-[15%] lg:ml-0">
                 {listings?.map((listing) => (
                   <div
                     onClick={() => router.push(`/listings/${listing.id}`)}
                     key={listing.id}
-                    className="flex flex-col card hover:scale-105 transition-all duration-150 ease-out"
+                    // className="flex flex-col card hover:scale-105 transition-all duration-150 ease-out"
                   >
-                    <div></div>
-                    <div className="pt-2 space-y-2">
+                    <div className="column lg:w-[20.33%] w-[90%] my-[15px] lg:h-[300px] lg:m-[15px] p-[15px] justify-center float-left cursor-pointer lg:hover:w-[21%] hover:w-[94%] transition-all">
                       <div>
-                        <h2 className="text-lg truncate">
-                          {listing.asset.name}
-                        </h2>
-                        <hr />
-                        <p className="truncate text-sm mt-2 text-gray-600">
-                          {listing.asset.description}
-                        </p>
+                        <img src={listing.asset.image?.toString()} alt="" />
+                      </div>
+                      <div className="pt-2 flex justify-between items-center">
+                        <div>
+                          <h2 className="text-lg font-Alkalami truncate">
+                            {listing.asset.name}
+                          </h2>
+                          {/* <hr /> */}
+                          <p className="truncate text-sm mt-2 text-gray-600">
+                            {listing.asset.description}
+                          </p>
+                        </div>
+                        <div>
+                          <div>
+                            <p className="text-[13.3px] font-semibold text-purple-700">
+                              {listing.buyoutCurrencyValuePerToken.displayValue}
+                              <span>
+                                {listing.buyoutCurrencyValuePerToken.symbol}
+                              </span>
+                            </p>
+                          </div>
+                          <div
+                            className={`flex items-center space-x-1 justify-end text-xs border w-fit ml-auto px-2 p-1 rounded-lg text-white ${
+                              listing.type === ListingType.Direct
+                                ? "bg-blue-500"
+                                : "bg-red-500"
+                            }`}
+                          >
+                            <p className="text-[12px]">
+                              {listing.type === ListingType.Direct
+                                ? "Buy Now"
+                                : "Auction"}
+                            </p>
+                            {listing.type === ListingType.Direct ? (
+                              <BanknotesIcon />
+                            ) : (
+                              <ClockIcon />
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
