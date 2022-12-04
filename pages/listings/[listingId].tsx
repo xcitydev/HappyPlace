@@ -25,24 +25,20 @@ import Link from "next/link";
 type Props = {};
 
 const ListingPage = (props: Props) => {
-  const [minimumNextBid, setMinimumNextBid] = useState<{
-    displayValue: string;
-    symbol: string;
-  }>();
-  //  const {
-  //    mutate: cancelListing,
-  //    isLoading: loadingCancel,
-  //    error: errorcancel,
-  //  } = useCancelListing(">>YourMarketplaceContractInstance<<");
-  const [bidAmount, setBidAmount] = useState("");
-  const networkMismatch = useNetworkMismatch();
-  const address = useAddress();
-  const [, switchNetwork] = useNetwork();
   const { contract } = useContract(
     process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT,
     "marketplace"
   );
   const router = useRouter();
+  const address = useAddress();
+  const [minimumNextBid, setMinimumNextBid] = useState<{
+    displayValue: string;
+    symbol: string;
+  }>();
+  const [bidAmount, setBidAmount] = useState("");
+  const networkMismatch = useNetworkMismatch();
+  const [, switchNetwork] = useNetwork();
+  
   const { listingId } = router.query as { listingId: string };
   const { data: offers } = useOffers(contract, listingId);
   const { mutate: makeBid } = useMakeBid(contract);
@@ -52,8 +48,25 @@ const ListingPage = (props: Props) => {
     error: errorMakeOffer,
   } = useMakeOffer(contract);
   const { data: listing, isLoading, error } = useListing(contract, listingId);
-  console.log(offers, "OFFERS");
+
   const { mutate: acceptOffer } = useAcceptDirectListingOffer(contract);
+
+   const fetchMinNextBid = async () => {
+     if (!listingId || !contract) return;
+
+     const { displayValue, symbol } = await contract.auction.getMinimumNextBid(
+       listingId
+     );
+     setMinimumNextBid({
+       displayValue: displayValue,
+       symbol: symbol,
+     });
+   };
+     const {
+       mutate: buyNow,
+       isLoading: isLoadingBuyNow,
+       error: errorBuyNow,
+     } = useBuyNow(contract);
 
   useEffect(() => {
     if (!listingId || !contract || !listing) return;
@@ -63,17 +76,7 @@ const ListingPage = (props: Props) => {
     }
   }, [listing, listingId, contract]);
 
-  const fetchMinNextBid = async () => {
-    if (!listingId || !contract) return;
-
-    const { displayValue, symbol } = await contract.auction.getMinimumNextBid(
-      listingId
-    );
-    setMinimumNextBid({
-      displayValue: displayValue,
-      symbol: symbol,
-    });
-  };
+ 
 
   const formatPlaceHolder = () => {
     if (!listing) return;
@@ -88,11 +91,7 @@ const ListingPage = (props: Props) => {
     }
   };
 
-  const {
-    mutate: buyNow,
-    isLoading: isLoadingBuyNow,
-    error: errorBuyNow,
-  } = useBuyNow(contract);
+
 
   const buyNFT = async () => {
     try {

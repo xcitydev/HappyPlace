@@ -21,7 +21,6 @@ import Login from "./components/login";
 const List = () => {
   const router = useRouter();
   const address = useAddress();
-  if (!address) return <Login />;
   const [selectedNFT, setSelectedNFT] = useState<NFT>();
   // check for network
   const networkMismatch = useNetworkMismatch();
@@ -189,6 +188,8 @@ const List = () => {
       }
     }
   };
+  if (!address) return <Login />;
+
   console.log(ownedNfts?.concat(ownedNft, ownedNft2), selectedNFT);
 
   return (

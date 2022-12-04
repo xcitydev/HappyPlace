@@ -24,9 +24,9 @@ const Proposal = (props: Props) => {
   // get list of all proposals
   const getAllProposal = async () => {
     if (!contract) return;
-    const proposals = await contract.getAll();
-    setProposals(proposals);
-    console.log(proposals, "NOT HERE");
+    const proposalss = await contract.getAll();
+    setProposals(proposalss);
+    console.log(proposalss, "NOT HERE");
   };
 
   // create a proposal
@@ -90,9 +90,9 @@ const Proposal = (props: Props) => {
 
               <div className={styles.proposals}>
                 {proposals &&
-                  proposals.map((proposal: any) => {
+                  proposals.map((proposal: any, i: any) => {
                     return (
-                      <Proposals
+                      <Proposals key={i}
                         proposalId={proposal.proposalId}
                         state={proposal.state}
                         votes={proposal.votes}

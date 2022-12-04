@@ -33,12 +33,11 @@ interface Props {
 }
 export default function Home({ collections }: Props) {
   const address = useAddress();
-  console.log("Collections", collections);
-  if (!address) return <Login />;
-  // Sliding upcoming collections
-  const delay = 4500;
   const [index, setIndex] = useState(0);
   const timeoutRef = useRef<any>();
+  // Sliding upcoming collections
+  const delay = 4500;
+  
 
   function resetTimeout() {
     if (timeoutRef.current) {
@@ -69,6 +68,7 @@ export default function Home({ collections }: Props) {
   const router = useRouter();
   const { data: listings, isLoading: loadingListings } =
     useActiveListings(contract);
+  if (!address) return <Login />;
   console.log(listings, "hereee");
   return (
     <div className={styles.container}>
