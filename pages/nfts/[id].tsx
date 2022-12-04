@@ -97,14 +97,14 @@ const NftDropPage = ({ collections }: Props) => {
       <div className="pt-[5rem]">
         <div className="w-[16%] fixed h-[90vh] border-r-2 border-black p-[2rem] whiteSmoke space-y-5">
           <Link
-            href="/List"
+            href="/list"
             className="flex items-center space-x-3 cols p-2 rounded textF  hover:px-4 transition-all"
           >
             <HomeIcon width="30px" />
             <p>Dashboard</p>
           </Link>
           <Link
-            href="/daoproposal/Proposal"
+            href="/daoproposal/proposal"
             className="flex items-center space-x-3 cols p-2 rounded textF  hover:px-4 transition-all"
           >
             <UserGroupIcon width="30px" />

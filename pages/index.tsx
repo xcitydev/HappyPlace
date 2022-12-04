@@ -82,14 +82,14 @@ export default function Home({ collections }: Props) {
       <div className="flex pt-[5rem] ">
         <div className="lg:w-[20%] w-[15%] fixed h-[90vh] border-r-2 border-black lg:p-[2rem] p-3 pt-[2rem] whiteSmoke space-y-5">
           <Link
-            href="/List"
+            href="/list"
             className="flex items-center space-x-3 cols p-2 rounded textF  hover:px-4 transition-all"
           >
             <HomeIcon width="30px" />
             <p className="hidden lg:flex">Dashboard</p>
           </Link>
           <Link
-            href="/daoproposal/Proposal"
+            href="/daoproposal/proposal"
             className="flex items-center space-x-3 cols p-2 rounded textF  hover:px-4 transition-all"
           >
             <UserGroupIcon width="30px" />
