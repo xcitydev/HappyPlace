@@ -82,7 +82,7 @@ export default function Home({ collections }: Props) {
       <div className="flex pt-[5rem] ">
         <div className="lg:w-[20%] w-[15%] fixed h-[90vh] border-r-2 border-black lg:p-[2rem] p-3 pt-[2rem] whiteSmoke space-y-5">
           <Link
-            href="/list"
+            href="/List"
             className="flex items-center space-x-3 cols p-2 rounded textF  hover:px-4 transition-all"
           >
             <HomeIcon width="30px" />

@@ -18,7 +18,7 @@ import network from "../utils/network";
 import { useRouter } from "next/router";
 import Login from "./components/login";
 
-const list = () => {
+const List = () => {
   const router = useRouter();
   const address = useAddress();
   if (!address) return <Login />;
@@ -270,7 +270,7 @@ const list = () => {
   );
 };
 
-export default list;
+export default List;
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const query = `*[_type == "caaddress"][0]{
