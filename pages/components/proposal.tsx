@@ -124,7 +124,7 @@ const Proposal = (proposal: Props) => {
           {statusText}
         </div>
       </div>
-      {proposal.votes.map((vote: any) => {
+      {proposal?.votes?.map((vote: any) => {
         return (
           <div key={Math.random()}>
             <button
@@ -141,7 +141,7 @@ const Proposal = (proposal: Props) => {
       })}
       <div className={styles.bottom}>
         <div className={styles.results}>
-          {proposal.votes.map((vote: any) => {
+          {proposal?.votes?.map((vote: any) => {
             const voteCount: any = ethers.utils.formatEther(vote.count);
 
             return (
