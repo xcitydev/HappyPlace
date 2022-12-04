@@ -104,7 +104,7 @@ const NftDropPage = ({ collections }: Props) => {
             <p>Dashboard</p>
           </Link>
           <Link
-            href="/daoproposal/proposal"
+            href="/daoproposal/Proposal"
             className="flex items-center space-x-3 cols p-2 rounded textF  hover:px-4 transition-all"
           >
             <UserGroupIcon width="30px" />

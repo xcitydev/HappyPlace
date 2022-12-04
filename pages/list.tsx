@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MediaRenderer,
   useAddress,
@@ -16,16 +16,17 @@ import { collectionAddy } from "../typings";
 import Header from "./components/header";
 import network from "../utils/network";
 import { useRouter } from "next/router";
+import Login from "./components/login";
 
 const list = () => {
   const router = useRouter();
   const address = useAddress();
+  if (!address) return <Login />;
   const [selectedNFT, setSelectedNFT] = useState<NFT>();
   // check for network
   const networkMismatch = useNetworkMismatch();
 
   const [, switchNetwork] = useNetwork();
-
   // get contracts
   const { contract } = useContract(
     process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT,
@@ -72,7 +73,8 @@ const list = () => {
     address
   );
   if (!ownedNft) return;
-  let myNFT = ownedNfts?.concat(ownedNft);
+  if (!ownedNft2) return;
+  let myNFT = ownedNfts?.concat(ownedNft, ownedNft2);
 
   // handle listing
 
@@ -187,7 +189,8 @@ const list = () => {
       }
     }
   };
-  console.log(ownedNfts?.concat(ownedNft));
+  console.log(ownedNfts?.concat(ownedNft, ownedNft2), selectedNFT);
+
   return (
     <div>
       <Header />

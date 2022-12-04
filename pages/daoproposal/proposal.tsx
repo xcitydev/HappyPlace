@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import styles from "../../styles/Home.module.css";
 import { useAddress, useContract } from "@thirdweb-dev/react";
 import Header from "../components/header";
-import Proposal from "../components/proposal";
+import Proposals from "../components/proposal";
 import Login from "../components/login";
 type Props = {};
 
-const proposal = (props: Props) => {
+const Proposal = (props: Props) => {
   const address = useAddress();
   const [proposalInput, setProposalInput] = useState("");
   const [proposals, setProposals] = useState<any>(null);
@@ -92,7 +92,7 @@ const proposal = (props: Props) => {
                 {proposals &&
                   proposals.map((proposal: any) => {
                     return (
-                      <Proposal
+                      <Proposals
                         proposalId={proposal.proposalId}
                         state={proposal.state}
                         votes={proposal.votes}
@@ -116,4 +116,4 @@ const proposal = (props: Props) => {
   );
 };
 
-export default proposal;
+export default Proposal;
