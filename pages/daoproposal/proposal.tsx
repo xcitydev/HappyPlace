@@ -11,11 +11,11 @@ const Proposal = (props: Props) => {
   const [proposalInput, setProposalInput] = useState("");
   const [proposals, setProposals] = useState<any>(null);
   const { contract, isLoading, error } = useContract<any>(
-    "0xa029696a33f655815422AE34ceFE0C1c6C9C1E39",
+    "0xaED1db2F23de8E434D95fd76342039F8D0D04C73",
     "vote"
   );
   const { contract: token } = useContract(
-    "0x62be077ab48C147122d3C3e54388aEA88F9d7815",
+    "0x31815E59997Db4767d4a90D4d7Fb1CA5586f4b4B",
     "token"
   );
 
@@ -58,8 +58,10 @@ const Proposal = (props: Props) => {
             <div
               className={`${styles.content} pt-[7rem] lg:flex justify-between`}
             >
-              {address === "0x09b5a50BBfE80C1409db873d8Ca87439f4C06f93" ? (
-                <div className={`${styles.createProposalForm} bg-[#00001f] rounded font-Cinzel`}>
+              {address === "0x988d9c9c025168b4Ace2462D102fAa4A60154Dc2" ? (
+                <div
+                  className={`${styles.createProposalForm} bg-[#00001f] rounded font-Cinzel`}
+                >
                   <div className={`${styles.formTitle} `}>
                     Make a Proposal Now
                   </div>
@@ -92,7 +94,8 @@ const Proposal = (props: Props) => {
                 {proposals &&
                   proposals.map((proposal: any, i: any) => {
                     return (
-                      <Proposals key={i}
+                      <Proposals
+                        key={i}
                         proposalId={proposal.proposalId}
                         state={proposal.state}
                         votes={proposal.votes}
