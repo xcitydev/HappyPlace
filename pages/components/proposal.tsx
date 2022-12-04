@@ -113,9 +113,9 @@ const Proposal = (proposal: Props) => {
         <div>
           <div className="lg:text-[1rem] font-semibold text-white">
             Proposer:{" "}
-            {proposal.proposer.slice(0, 4) +
+            {proposal?.proposer?.slice(0, 4) +
               "..." +
-              proposal.proposer.slice(-4)}
+              proposal?.proposer?.slice(-4)}
           </div>
 
           <div className={styles.description}>{proposal.description}</div>
